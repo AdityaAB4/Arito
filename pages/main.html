@@ -7,58 +7,73 @@
     <title>Arito | Test your Arithmetic Skills</title>
     <link rel="stylesheet" href="../css/basic.css" />
     <link rel="shortcut icon" href="../assets/images/Arito_favicon.png" type="image/x-icon" />
-
     <link rel="stylesheet" href="../css/main.css" />
-  </head>
   <body>
 
 
 <div class="result_page">
     <div class="front_results_page">
         <header>
-            <h1>Results 😃</h1>
+            <h1>Result 🧐</h1>
         </header>
-        <h3><em>Dear <span class="user_name">NAME_OF_THE_PERSON</span>,</em></h3>
-        <span>You have scored <strong class="marks_obtained">9</strong> out of <strong class="total_marks">MARKS_HERE</strong> marks.</span>
-        <span>Which in terms of percentage means, <strong><span class="percent_obtained">PERCENTAGE_HERE</span>%</strong></span>
-        <span>You took <strong><span class="time_taken">TIME_TAKEN_HERE</span></strong> to complete the test</span>
+        <div class="results_text_div">
+
+          <span class="salutation_text">
+            Dear <span class="user_name highlighted_text">NAME_OF_THE_PERSON</span>,
+          </span>
+          <span>You have scored <span class="highlighted_text"> <strong class="marks_obtained">9</strong> out of <strong class="total_marks">MARKS_HERE</strong> marks.</span></span>
+          <span>Which in terms of percentage is: <strong class="highlighted_text percentage_text"><span class="percent_obtained">PERCENTAGE_HERE</span>%</strong></span>
+          <span>You took <strong><span class="highlighted_text time_taken">TIME_TAKEN_HERE</span></strong> to complete the test</span>
+        </div>
     </div>
 
     <div class="results_page_navigation_div">
-      <button class="retest_button">RETEST (Reload to Restart)</button>
+      <button class="retest_button">RETAKE TEST</button>
+      <button class="retest_button new_test_button">NEW TEST</button>
+      <a href='../index.html' class="button retest_button back_to_home_page">BACK TO HOMEPAGE</a>
     </div>
 
-    <div class="all_questions_div">
-      <!-- <div class="question-serialno">
-        <span class="question_number_span">Question <span class="q_num"></span></span>
+  <div class="all_questions_div">
 
-        <div class="q_numbers_div">
-            <div class="upNum_div">
-                <span class="upNumber"></span>
-            </div>
-            <div class="downNum_and_sign_div">
-                <span class="sign"></span>
-                <span class="downNum"></span>
-            </div>
+    <template class="question_template">
+
+      <div class="q_no_div">
+
+        <span class="question_number_span">Question <span class="q_num">${q_num}</span></span>
+
+      <div class="question-serialno ">
+      <div class="q_numbers_div">
+          <div class="upNum_div">
+            <span class="upNumber">${upnum}</span>
+          </div>
+          <div class="downNum_and_sign_div">
+            <span class="sign">${s_of_q}</span>
+            <span class="downNum">${downum}</span>
+          </div>
         </div>
         <div class="answers_div">
           <div class="user_answer_div">
-            <span class="user_answer is_wrong"></span>
+            <span class="user_answer">${user_answer_}</span>
           </div>
           <div class="real_answer_div">
-            <span class="real_answer is_correct"></span>
+            <span class="real_answer">${real_answer_}</span>
           </div>
         </div>
-    </div> -->
-</div>
+
+      </div>
+    </div>
+
+  </template>
+
+  </div>
 </div>
 
     <div class="start_test_div">
         <span class="starting_text">Starting the Test <span class="start_countdown"></span></span>
         <ul>
             <li>Keep a pencil/pen, rough copy and eraser with you.</li>
-            <li>When a question comes, write the question carefully and then start solving it.</li>
-            <li>After solving the question, write the anwer in the input area below and press Enter or Click on "Done" Button Below.</li>
+            <li>Write each question carefully and then start solving it to avoid mistakes.</li>
+            <li>After solving a question, write the answer in the input area and press <kbd>Enter</kbd> or Click on "Done" Button.</li>
             <li>BELIEVE IN YOURSELF!</li>
         </ul>
         <button class="start_now_btn">Start Now!</button>
@@ -73,12 +88,14 @@
         <h2 class="question_details">Question: <span class="q_number"></span>/<span class="total_qs"></span> </h2>
     </header>
 
+    <div class="question_container">
+      <button class="prev_question_btn">&#8249;</button>
       <div class="question_div">
         <div class="question_numbers_div">
             <div class="upNumber_div">
                 <span class="upNumber"></span>
             </div>
-            
+
             <div class="downNumber_and_sign_div">
                 <span class="sign"></span>
                 <span class="downNumber"></span>
@@ -101,6 +118,8 @@
             <button type="submit" class="question_done_btn">Done!</button>
         </div>
       </div>
+      <button class="next_question_btn">&#8250;</button>
+    </div>
     </div>
 
 
@@ -125,7 +144,7 @@
           </div>
           <div class="form_element">
             <label for="difficulty">Difficulty Level</label>
-            <select name="difficulty" id="difficulty" required>
+            <select name="difficulty" id="difficulty" required onchange="change_max_attr_val()">
               <option value="very_easy">Very Easy (1-10)</option>
               <option value="easy">Easy (11-50)</option>
               <option value="medium">Medium (50-100)</option>
@@ -134,8 +153,8 @@
             </select>
           </div>
           <div class="form_element">
-            <label for="no_of_ques">Number of Questions</label>
-            <input type="number" name="no_of_ques" id="no_of_ques" min="1" max="10000" required/>
+            <label for="no_of_ques" id="no_of_ques_label">No. of Questions (below 56)</label>
+            <input type="number" name="no_of_ques" id="no_of_ques" min="1" max="55" required/>
           </div>
 
           <div class="form_element negmark_div">
@@ -164,7 +183,8 @@
           <img src ="../assets/images/zero_volume.png" title="Zero Volume">
         </li>
         <li>
-          <input type="range" min="0" max="10" value="5" class="slider" id="volume_slidebar">
+          <!-- default volume(slider position) set to 0 -->
+          <input type="range" min="0" max="10" value="0" class="slider" id="volume_slidebar">
         </li>
         <li>
           <img src ="../assets/images/full_volume.png" title="Full Volume">
@@ -180,4 +200,6 @@
   </body>
   <script src="../js/main.js"></script>
   <script src="../js/basic.js"></script>
+
+
 </html>
